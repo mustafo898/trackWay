@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "478753999506",
+    "project_id": "trackway-41f9e",
+    "storage_bucket": "trackway-41f9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478753999506:android:35c0e0331ec9467c3a744b",
+        "android_client_info": {
+          "package_name": "dark.composer.trackway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478753999506-dp7l2lfg363lka4d06uqihuli5f8u2i2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dark.composer.trackway",
+            "certificate_hash": "f12aea9069663a9d6a8359282a93c416134f086e"
+          }
+        },
+        {
+          "client_id": "478753999506-1lgieln2saitgapnhato465vqt23roqp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5FDoWR_-jU98uOJBCUSTZhjZfJ-Bk1IY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478753999506-1lgieln2saitgapnhato465vqt23roqp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

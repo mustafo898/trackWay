@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav"
+    app:startDestination="@id/travelFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="dark.composer.trackway.presentation.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_travelFragment"
+            app:destination="@id/travelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/travelFragment"
+        android:name="dark.composer.trackway.presentation.TravelFragment"
+        android:label="fragment_travel"
+        tools:layout="@layout/fragment_travel" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="dark.composer.trackway.presentation.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="dark.composer.trackway.presentation.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
+</navigation>

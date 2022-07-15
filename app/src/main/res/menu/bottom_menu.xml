@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/travelFragment"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/ic_run"
+        android:title="Trip">
+    </item>
+
+    <item
+        android:id="@+id/mainFragment"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/ic_add"
+        android:title="Add">
+    </item>
+
+    <item
+        android:id="@+id/historyFragment"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/ic_history"
+        android:title="Add">
+    </item>
+
+    <item
+        android:id="@+id/settingsFragment"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/ic_settings"
+        android:title="Add">
+    </item>
+</menu>
