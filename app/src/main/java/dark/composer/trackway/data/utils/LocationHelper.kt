@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 class LocationHelper {
@@ -82,7 +83,6 @@ class LocationHelper {
                     // Convert milliseconds to seconds
                     val elapsedTimeInSeconds = (p0.result!!.time - lastLocation.time) / 1_000.0
                     val distanceInMeters = lastLocation.distanceTo(p0.result!!)
-                    val r = 45
                     // Speed in m/s
                     distanceInMeters / elapsedTimeInSeconds
                 } ?: 0.0

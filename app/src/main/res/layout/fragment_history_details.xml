@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".presentation.HistoryDetailsFragment">
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_margin = "10dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/barChart"/>
+
+    <fragment
+        android:id="@+id/detailsMap"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        tools:context=".presentation.TravelFragment" />
+</androidx.appcompat.widget.LinearLayoutCompat>

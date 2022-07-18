@@ -35,7 +35,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         }
 
         binding.start.setOnClickListener {
-            if (binding.name.text.toString().isNotEmpty()) {
+            if (binding.name.text.toString().trim().isNotEmpty()) {
+                shared.setTravelName(binding.name.text.toString())
                 navController.navigate(
                     R.id.action_mainFragment_to_travelFragment,
                     bundleOf("TRAVEL_NAME" to binding.name.text.toString())

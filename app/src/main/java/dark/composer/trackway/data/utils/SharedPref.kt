@@ -22,13 +22,13 @@ class SharedPref(context: Context) {
     fun getUsername() = preferences.getString("USER_NAME", "")
 
     //////////////////////////////////////////////////////////
-    fun setTravelId(id: String) {
+    fun setTravelName(name: String) {
         editor = preferences.edit()
-        editor.putString("TRAVEL_ID", id)
+        editor.putString("TRAVEL", name)
         editor.apply()
     }
 
-    fun getTravelId() = preferences.getString("TRAVEL_ID", "")
+    fun getTravelName() = preferences.getString("TRAVEL", "")
 
     //////////////////////////////////////////////////////////
     fun clearAllData() {

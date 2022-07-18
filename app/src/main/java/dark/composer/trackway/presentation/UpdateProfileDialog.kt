@@ -53,10 +53,8 @@ class UpdateProfileDialog(content: Context) : AlertDialog(content) {
             }
         }
 
-        if (s && n){
-            binding.acceptFB.setOnClickListener {
-                updateListener?.invoke(binding.name.text.toString(),binding.password.text.toString())
-            }
+        binding.acceptFB.setOnClickListener {
+            updateListener?.invoke(binding.name.text.toString(),binding.password.text.toString())
         }
 
         binding.cancelFB.setOnClickListener {
