@@ -7,7 +7,7 @@ class HistoryData {
     var travelId: String = ""
     var lat: Double = 0.0
     var lon: Double = 0.0
-    var distance:Float = 0f
+//    var distance:Double = 0.0
     constructor()
 
     constructor(
@@ -17,7 +17,7 @@ class HistoryData {
         travelId: String,
         lat: Double,
         lon: Double,
-        distance: Float
+//        distance: Double
     ) {
         this.id = id
         this.historyAvgSpeed = historyAvgSpeed
@@ -25,7 +25,7 @@ class HistoryData {
         this.travelId = travelId
         this.lat = lat
         this.lon = lon
-        this.distance = distance
+//        this.distance = distance
     }
 
 

@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.SphericalUtil
 import dark.composer.trackway.R
 import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.data.utils.SharedPref
@@ -29,7 +31,8 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 
 
-class HistoryDetailsFragment : BaseFragment<FragmentHistoryDetailsBinding>(FragmentHistoryDetailsBinding::inflate){
+class HistoryDetailsFragment :
+    BaseFragment<FragmentHistoryDetailsBinding>(FragmentHistoryDetailsBinding::inflate) {
 
     private lateinit var viewModel: HistoryViewModel
     var name = ""
@@ -58,8 +61,8 @@ class HistoryDetailsFragment : BaseFragment<FragmentHistoryDetailsBinding>(Fragm
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
                 viewModel.travelFlow.collect { list ->
-                    list.forEach{
-                        options.add(LatLng(it.lat,it.lon))
+                    list.forEach {
+                        options.add(LatLng(it.lat, it.lon))
                         Log.d("EEEE", "latlng: ${it.lat} ${it.lon}")
                     }
                     load(list)
@@ -75,26 +78,30 @@ class HistoryDetailsFragment : BaseFragment<FragmentHistoryDetailsBinding>(Fragm
         }
     }
 
-    private fun load(list:List<HistoryData>) {
+    private fun load(list: List<HistoryData>) {
         var count = 0
         val firsTime = list.first().historyTime
         var lasTime = list.last().historyTime
         var speed = 0.0
         val calendar = Calendar.getInstance()
-        var distance = 0f
+        var distance = 0.0
         var d = 0.0
-        for (i in 0 until list.size-1){
-            distance += list[i].distance
-            count+=1
-            speed+=list[i].historyAvgSpeed
+        for (i in 0 until list.size - 1) {
+            d = SphericalUtil.computeDistanceBetween(
+                LatLng(list[i].lat, list[i].lon),
+                LatLng(list[i + 1].lat, list[i + 1].lon)
+            )
+            distance += d
+            count += 1
+            speed += list[i].historyAvgSpeed
         }
 
-        lasTime-=firsTime
+        lasTime -= firsTime
         calendar.timeInMillis = lasTime
-        speed/=count
+        speed /= count
 
-        binding.distance.text = "${String.format("%.1f",distance)} km"
-        binding.speed.text = String.format("%.1f",speed)
+        binding.distance.text = String.format("%.3f", distance / 1000)
+        binding.speed.text = String.format("%.1f", speed)
         binding.time.text = SimpleDateFormat("dd-MM-yyyy").format(
             calendar.time
         )

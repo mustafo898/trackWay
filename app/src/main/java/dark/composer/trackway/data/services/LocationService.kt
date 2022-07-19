@@ -28,6 +28,7 @@ class LocationService : Service() {
             name: String,
             userName: String
         ) {
+            Toast.makeText(context, "Start", Toast.LENGTH_SHORT).show()
             if (isServiceRunningInForeground(context, LocationService::class.java)) {
                 stopLocationService(context)
             }
@@ -60,13 +61,19 @@ class LocationService : Service() {
             val travelId = it.getString("TRAVEL_ID") ?: ""
             val userName = it.getString("USER_NAME") ?: ""
             val name = it.getString("NAME") ?: ""
-            locationHelper?.setOnChangeLocation { lat, lon, speed, time,distance ->
+            print(travelId)
+            print(userName)
+            print(name)
+            locationHelper?.setOnChangeLocation { lat, lon, speed, time, dis->
+                val d = 4
+                 print(dis)
+                print(speed)
                 val key = db.getReference("history").push().key ?: ""
                 db.getReference("history").child(userName).child(name).child(time.toString())
-                    .setValue(HistoryData(key, speed, time, travelId, lat, lon,distance))
+                    .setValue(HistoryData(key, speed, time, travelId, lat, lon))
                 Log.d(
-                    "History",
-                    "onStartCommand: ${HistoryData(key, speed, time, travelId, lat, lon,distance)}"
+                    "EEEe",
+                    "onStartCommand: ${HistoryData(key, speed, time, travelId, lat, lon,)}"
                 )
             }
         }

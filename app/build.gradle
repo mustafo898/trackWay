@@ -65,5 +65,8 @@ dependencies {
     //chart
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    //noinspection GradleDynamicVersion
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
+
     implementation 'com.github.jd-alexander:library:1.1.0'
 }
