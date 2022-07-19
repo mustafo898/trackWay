@@ -1,10 +1,8 @@
 package dark.composer.trackway.presentation.history.detail
 
 import android.graphics.Color
-import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
@@ -22,13 +20,9 @@ import dark.composer.trackway.databinding.FragmentHistoryDetailsBinding
 import dark.composer.trackway.presentation.BaseFragment
 import dark.composer.trackway.presentation.history.HistoryViewModel
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.asin
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
 
 
 class HistoryDetailsFragment :
@@ -83,7 +77,9 @@ class HistoryDetailsFragment :
         val firsTime = list.first().historyTime
         var lasTime = list.last().historyTime
         var speed = 0.0
-        val calendar = Calendar.getInstance()
+        val first = Calendar.getInstance()
+        val time = Calendar.getInstance()
+        val last = Calendar.getInstance()
         var distance = 0.0
         var d = 0.0
         for (i in 0 until list.size - 1) {
@@ -95,43 +91,44 @@ class HistoryDetailsFragment :
             count += 1
             speed += list[i].historyAvgSpeed
         }
-
-        lasTime -= firsTime
-        calendar.timeInMillis = lasTime
         speed /= count
 
+        last.timeInMillis = lasTime
+        binding.endTime.text = SimpleDateFormat().format(last.time)
+        first.timeInMillis = firsTime
+        binding.startTime.text = SimpleDateFormat().format(first.time)
+
+        binding.time.text = time(firsTime.toString(),lasTime.toString())
         binding.distance.text = String.format("%.3f", distance / 1000)
         binding.speed.text = String.format("%.1f", speed)
-        binding.time.text = SimpleDateFormat("dd-MM-yyyy").format(
-            calendar.time
-        )
         binding.travelName.text = name
     }
 
-    private fun calculationByDistance(StartP: LatLng, EndP: LatLng): Double {
-        val radius = 6371 // radius of earth in Km
-        val lat1 = StartP.latitude
-        val lat2 = EndP.latitude
-        val lon1 = StartP.longitude
-        val lon2 = EndP.longitude
-        val dLat = Math.toRadians(lat2 - lat1)
-        val dLon = Math.toRadians(lon2 - lon1)
-        val a = (sin(dLat / 2) * sin(dLat / 2)
-                + (cos(Math.toRadians(lat1))
-                * cos(Math.toRadians(lat2)) * sin(dLon / 2)
-                * sin(dLon / 2)))
-        val c = 2 * asin(sqrt(a))
-        val valueResult = radius * c
-        val km = valueResult / 1
-        val newFormat = DecimalFormat("####")
-        val kmInDec: Int = Integer.valueOf(newFormat.format(km))
-        val meter = valueResult % 1000
-        val meterInDec: Int = Integer.valueOf(newFormat.format(meter))
-        Log.i(
-            "Radius Value", "" + valueResult + "   KM  " + kmInDec
-                    + " Meter   " + meterInDec
-        )
-        return radius * c
+    fun time(l1: String, l2: String): String {
+        val format = SimpleDateFormat("yy/MM/dd HH:mm:ss")
+
+        var d1: Date? = null
+        var d2: Date? = null
+        try {
+            d1 = format.parse(l1)
+            d2 = format.parse(l2)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+
+        val diff = d2!!.time - d1!!.time
+        val diffSeconds = diff / 1000
+        val diffMinutes = diff / (60 * 1000)
+        val diffHours = diff / (60 * 60 * 1000)
+        println("Time in seconds: $diffSeconds seconds.")
+        println("Time in minutes: $diffMinutes minutes.")
+        println("Time in hours: $diffHours hours.")
+        if (diffMinutes > 3600) {
+            return "$diffHours : $diffMinutes : $diffSeconds"
+        } else {
+            return "$diffMinutes : $diffSeconds"
+        }
     }
 }
 

@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:text="Time"
+            android:text="Started Time"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:layout_weight="1"
-            android:text="Time"
+            android:text="Finished Time"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold" />

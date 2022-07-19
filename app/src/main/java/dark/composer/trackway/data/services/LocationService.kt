@@ -13,6 +13,9 @@ import dark.composer.trackway.R
 import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.data.utils.LocationHelper
 import dark.composer.trackway.presentation.activity.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LocationService : Service() {
 
