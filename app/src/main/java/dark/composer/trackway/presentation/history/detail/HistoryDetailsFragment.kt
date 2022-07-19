@@ -20,7 +20,6 @@ import dark.composer.trackway.databinding.FragmentHistoryDetailsBinding
 import dark.composer.trackway.presentation.BaseFragment
 import dark.composer.trackway.presentation.history.HistoryViewModel
 import kotlinx.coroutines.launch
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -98,37 +97,29 @@ class HistoryDetailsFragment :
         first.timeInMillis = firsTime
         binding.startTime.text = SimpleDateFormat().format(first.time)
 
-        binding.time.text = time(firsTime.toString(),lasTime.toString())
+        binding.time.text = getTimeDif(first,last)
         binding.distance.text = String.format("%.3f", distance / 1000)
         binding.speed.text = String.format("%.1f", speed)
         binding.travelName.text = name
     }
 
-    fun time(l1: String, l2: String): String {
-        val format = SimpleDateFormat("yy/MM/dd HH:mm:ss")
+    private fun getTimeDif(cal1: Calendar, cal2: Calendar): String {
+        val mills1 = cal1.timeInMillis
+        val mills2 = cal2.timeInMillis
+        val diff = mills2 - mills1
+//        val diffSeconds = diff / 1000
+//        val diffMinutes = diff / (60 * 1000)
+//        val diffHours = diff / (60 * 60 * 1000)
+        val hours = (diff / (1000 * 60 * 60))
+        val min = (diff / (1000 * 60) % 60)
 
-        var d1: Date? = null
-        var d2: Date? = null
-        try {
-            d1 = format.parse(l1)
-            d2 = format.parse(l2)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-
-        val diff = d2!!.time - d1!!.time
-        val diffSeconds = diff / 1000
-        val diffMinutes = diff / (60 * 1000)
-        val diffHours = diff / (60 * 60 * 1000)
-        println("Time in seconds: $diffSeconds seconds.")
-        println("Time in minutes: $diffMinutes minutes.")
-        println("Time in hours: $diffHours hours.")
-        if (diffMinutes > 3600) {
-            return "$diffHours : $diffMinutes : $diffSeconds"
+        return if (min > 60) {
+            "$hours : $min"
         } else {
-            return "$diffMinutes : $diffSeconds"
+            "$min mins"
         }
+//        return (diffMinutes.toString() + "dk." + (diffSeconds - diffMinutes * 60)
+//                + "sn" + (diff - diffSeconds * 1000) + "ms.")
     }
 }
 
