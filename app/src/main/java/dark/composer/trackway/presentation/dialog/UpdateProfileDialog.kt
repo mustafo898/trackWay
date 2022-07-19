@@ -1,8 +1,7 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.dialog
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
-import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import dark.composer.trackway.R

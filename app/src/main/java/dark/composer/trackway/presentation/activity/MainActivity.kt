@@ -1,4 +1,4 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.activity
 
 import android.content.Context
 import android.location.LocationManager

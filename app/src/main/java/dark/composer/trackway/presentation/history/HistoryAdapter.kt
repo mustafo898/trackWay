@@ -1,9 +1,8 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.history
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.databinding.ItemHistoryBinding
 
 class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {

@@ -5,13 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dark.composer.trackway.R
 import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.data.utils.LocationHelper
-import dark.composer.trackway.presentation.MainActivity
+import dark.composer.trackway.presentation.activity.MainActivity
 
 class LocationService : Service() {
 
@@ -39,6 +40,7 @@ class LocationService : Service() {
 
         fun stopLocationService(context: Activity) {
             val intent = Intent(context, LocationService::class.java)
+            Toast.makeText(context, "Finish", Toast.LENGTH_SHORT).show()
             context.stopService(intent)
         }
 
@@ -58,13 +60,13 @@ class LocationService : Service() {
             val travelId = it.getString("TRAVEL_ID") ?: ""
             val userName = it.getString("USER_NAME") ?: ""
             val name = it.getString("NAME") ?: ""
-            locationHelper?.setOnChangeLocation { lat, lon, speed, time ->
+            locationHelper?.setOnChangeLocation { lat, lon, speed, time,distance ->
                 val key = db.getReference("history").push().key ?: ""
                 db.getReference("history").child(userName).child(name).child(time.toString())
-                    .setValue(HistoryData(key, speed, time, travelId, lat, lon))
+                    .setValue(HistoryData(key, speed, time, travelId, lat, lon,distance))
                 Log.d(
                     "History",
-                    "onStartCommand: ${HistoryData(key, speed, time, travelId, lat, lon)}"
+                    "onStartCommand: ${HistoryData(key, speed, time, travelId, lat, lon,distance)}"
                 )
             }
         }

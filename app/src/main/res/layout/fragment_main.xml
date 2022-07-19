@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".presentation.MainFragment">
+    tools:context=".presentation.main.MainFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameInput"

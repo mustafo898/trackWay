@@ -1,22 +1,17 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.travel
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.location.LocationListener
 import android.location.LocationManager
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dark.composer.trackway.data.local.TravelData
 import dark.composer.trackway.data.services.LocationService
-import dark.composer.trackway.data.utils.SharedPref
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch

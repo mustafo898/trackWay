@@ -10,10 +10,10 @@ import java.util.*
 
 class LocationHelper {
 
-    private var listener: ((lat: Double, lon: Double, speed: Double, time: Long) -> Unit)? = null
+    private var listener: ((lat: Double, lon: Double, speed: Double, time: Long,distance:Float) -> Unit)? = null
 
     //    var previousLocation: Location? = null
-    fun setOnChangeLocation(f: (lat: Double, lon: Double, speed: Double, time: Long) -> Unit) {
+    fun setOnChangeLocation(f: (lat: Double, lon: Double, speed: Double, time: Long,distance:Float) -> Unit) {
         listener = f
     }
 
@@ -40,14 +40,14 @@ class LocationHelper {
                         distanceInMeters / elapsedTimeInSeconds
                     } ?: 0.0
 //                    previousLocation = p0.lastLocation!!
-
                     if (lastLocation == null) {
                         lastLocation = p0.lastLocation!!
                         listener?.invoke(
                             p0.lastLocation!!.latitude,
                             p0.lastLocation!!.longitude,
                             lastLocation?.speed!!.toDouble(),
-                            Date().time
+                            Date().time,
+                            p0.lastLocation!!.distanceTo(lastLocation)
                         )
                     } else if (lastLocation!!.latitude != p0.lastLocation!!.latitude
                         || lastLocation!!.longitude != p0.lastLocation!!.longitude
@@ -57,7 +57,8 @@ class LocationHelper {
                             p0.lastLocation!!.latitude,
                             p0.lastLocation!!.longitude,
                             speed,
-                            Date().time
+                            Date().time,
+                            p0.lastLocation!!.distanceTo(lastLocation)
                         )
                     }
                 } catch (e: Exception) {
@@ -94,7 +95,8 @@ class LocationHelper {
                         p0.result!!.latitude,
                         p0.result!!.longitude,
                         p0.result.speed.toDouble(),
-                        Date().time
+                        Date().time,
+                        p0.result.distanceTo(lastLocation)
                     )
                 } else if (lastLocation!!.latitude != p0.result!!.latitude
                     || lastLocation!!.longitude != p0.result!!.longitude
@@ -104,7 +106,8 @@ class LocationHelper {
                         p0.result!!.latitude,
                         p0.result!!.longitude,
                         p0.result.speed.toDouble(),
-                        Date().time
+                        Date().time,
+                        p0.result.distanceTo(lastLocation)
                     )
                 }
             } catch (e: Exception) {

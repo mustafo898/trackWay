@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="dark.composer.trackway.presentation.MainFragment"
+        android:name="dark.composer.trackway.presentation.main.MainFragment"
         android:label="Main"
         tools:layout="@layout/fragment_main" >
         <action
@@ -16,12 +16,12 @@
     </fragment>
     <fragment
         android:id="@+id/travelFragment"
-        android:name="dark.composer.trackway.presentation.TravelFragment"
+        android:name="dark.composer.trackway.presentation.travel.TravelFragment"
         android:label="Travel"
         tools:layout="@layout/fragment_travel" />
     <fragment
         android:id="@+id/splashFragment"
-        android:name="dark.composer.trackway.presentation.SplashFragment"
+        android:name="dark.composer.trackway.presentation.splash.SplashFragment"
         android:label="Splash"
         tools:layout="@layout/fragment_splash" >
         <action
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="dark.composer.trackway.presentation.HistoryFragment"
+        android:name="dark.composer.trackway.presentation.history.HistoryFragment"
         android:label="History"
         tools:layout="@layout/fragment_history" >
         <action
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyDetailsFragment"
-        android:name="dark.composer.trackway.presentation.HistoryDetailsFragment"
+        android:name="dark.composer.trackway.presentation.history.detail.HistoryDetailsFragment"
         android:label="History Details"
         tools:layout="@layout/fragment_history_details" />
 </navigation>

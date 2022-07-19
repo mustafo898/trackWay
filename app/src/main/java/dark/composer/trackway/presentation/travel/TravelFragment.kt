@@ -1,25 +1,18 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.travel
 
 import android.Manifest
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.location.*
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.location.LocationManagerCompat.requestLocationUpdates
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -28,6 +21,7 @@ import dark.composer.trackway.R
 import dark.composer.trackway.data.services.LocationService
 import dark.composer.trackway.data.utils.SharedPref
 import dark.composer.trackway.databinding.FragmentTravelBinding
+import dark.composer.trackway.presentation.BaseFragment
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -43,7 +37,9 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         googleMap.isBuildingsEnabled = true
 
         googleMap.setOnMyLocationButtonClickListener {
-            checkPermission(name, shared.getUsername().toString())
+            if (!checkPermission()){
+                checkPermission()
+            }
             false
         }
 
@@ -56,8 +52,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
 
         if (name.isNotEmpty()) {
-//            viewModel.send(name,requireContext(),requireContext(),shared.getUsername().toString())
-            checkPermission(name, shared.getUsername().toString())
+            viewModel.send(name,requireContext(),requireActivity(),shared.getUsername().toString())
         }
 
         binding.searchImage.setOnClickListener {
@@ -76,7 +71,9 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
     }
 
-    private fun checkPermission(name: String, username: String) {
+
+
+    private fun checkPermission():Boolean {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -88,7 +85,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                         Manifest.permission.ACCESS_FINE_LOCATION,
                     ) == PackageManager.PERMISSION_GRANTED
             -> {
-                viewModel.send(name, requireContext(), requireActivity(), username)
+                return true
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
                 Toast.makeText(
@@ -103,6 +100,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                     ),
                     PERMISSION_REQUEST_CODE
                 )
+                return false
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) -> {
                 Toast.makeText(
@@ -117,6 +115,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                     ),
                     PERMISSION_REQUEST_CODE
                 )
+                return false
             }
             else -> {
                 // You can directly ask for the permission.
@@ -127,6 +126,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                     ),
                     PERMISSION_REQUEST_CODE
                 )
+                return false
             }
         }
     }
@@ -135,10 +135,15 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         shared = SharedPref(
             requireContext()
         )
-//        checkPermission()
+        checkPermission()
 
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
-        viewModel.getLocation(requireContext())
+
+        if (checkPermission()){
+            viewModel.getLocation(requireContext())
+        }else{
+            checkPermission()
+        }
 
         val bundle: Bundle? = this.arguments
         bundle?.let {
@@ -152,7 +157,8 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
 
         binding.finish.setOnClickListener {
-            LocationService.stopLocationService(requireActivity())
+            activity?.stopService(Intent(requireActivity(),LocationService::class.java))
+//            LocationService.stopLocationService(requireActivity())
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

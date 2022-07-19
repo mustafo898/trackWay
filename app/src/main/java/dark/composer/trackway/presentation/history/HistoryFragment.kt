@@ -1,4 +1,4 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.history
 
 import android.util.Log
 import android.widget.Toast
@@ -11,6 +11,7 @@ import dark.composer.trackway.R
 import dark.composer.trackway.data.services.LocationService
 import dark.composer.trackway.data.utils.SharedPref
 import dark.composer.trackway.databinding.FragmentHistoryBinding
+import dark.composer.trackway.presentation.BaseFragment
 import kotlinx.coroutines.launch
 class HistoryFragment : BaseFragment<FragmentHistoryBinding>(FragmentHistoryBinding::inflate) {
     private lateinit var viewModel: HistoryViewModel

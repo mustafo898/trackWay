@@ -2,7 +2,7 @@ package dark.composer.trackway.data.di.module
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import dark.composer.trackway.presentation.MainActivity
+import dark.composer.trackway.presentation.activity.MainActivity
 
 @Module
 abstract class ActivityBuildersModule {

@@ -1,4 +1,4 @@
-package dark.composer.trackway.presentation
+package dark.composer.trackway.presentation.history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
