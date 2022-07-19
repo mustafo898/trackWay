@@ -1,6 +1,7 @@
 package dark.composer.trackway.data.services
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
@@ -15,8 +16,41 @@ import dark.composer.trackway.presentation.MainActivity
 class LocationService : Service() {
 
     private var locationHelper: LocationHelper? = null
-    val db by lazy {
+    private val db by lazy {
         Firebase.database
+    }
+
+    companion object {
+        fun startLocationService(
+            context: Activity,
+            travelId: String,
+            name: String,
+            userName: String
+        ) {
+            if (isServiceRunningInForeground(context, LocationService::class.java)) {
+                stopLocationService(context)
+            }
+            val intent = Intent(context, LocationService::class.java)
+            intent.putExtra("TRAVEL_ID", travelId)
+            intent.putExtra("USER_NAME", userName)
+            intent.putExtra("NAME", name)
+            context.startService(intent)
+        }
+
+        fun stopLocationService(context: Activity) {
+            val intent = Intent(context, LocationService::class.java)
+            context.stopService(intent)
+        }
+
+        fun isServiceRunningInForeground(context: Context, serviceClass: Class<*>): Boolean {
+            val manager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+                if (serviceClass.name == service.service.className) {
+                    return service.foreground
+                }
+            }
+            return false
+        }
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {

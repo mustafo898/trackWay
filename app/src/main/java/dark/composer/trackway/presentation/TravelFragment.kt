@@ -9,6 +9,7 @@ import android.content.pm.PackageManager
 import android.location.*
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
@@ -29,7 +31,6 @@ import dark.composer.trackway.databinding.FragmentTravelBinding
 import kotlinx.coroutines.launch
 import java.util.*
 
-
 class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding::inflate) {
     private lateinit var shared: SharedPref
     lateinit var viewModel: TravelViewModel
@@ -38,6 +39,13 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.isMyLocationEnabled = true
+//        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        googleMap.isBuildingsEnabled = true
+
+        googleMap.setOnMyLocationButtonClickListener {
+            checkPermission(name, shared.getUsername().toString())
+            false
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
@@ -49,7 +57,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
         if (name.isNotEmpty()) {
 //            viewModel.send(name,requireContext(),requireContext(),shared.getUsername().toString())
-            checkPermission(name,shared.getUsername().toString())
+            checkPermission(name, shared.getUsername().toString())
         }
 
         binding.searchImage.setOnClickListener {
@@ -68,38 +76,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
     }
 
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        checkPermission()
-//    }
-//
-//    private fun checkPermission() {
-//        if (ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED &&
-//            ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            ActivityCompat.requestPermissions(
-//                requireActivity(), arrayOf(
-//                    Manifest.permission.ACCESS_COARSE_LOCATION,
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//
-//                    ),
-//                12345
-//            )
-//        }
-//    }
-
-    private fun checkPermission(name: String, username: String){
+    private fun checkPermission(name: String, username: String) {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -110,13 +87,8 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                         requireContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION,
                     ) == PackageManager.PERMISSION_GRANTED
-//                        &&
-//                        ContextCompat.checkSelfPermission(
-//                            requireContext(),
-//                            Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-//                        ) == PackageManager.PERMISSION_GRANTED
             -> {
-               viewModel.send(name,requireContext(),requireActivity(),username)
+                viewModel.send(name, requireContext(), requireActivity(), username)
             }
             shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) -> {
                 Toast.makeText(
@@ -173,18 +145,25 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             name = it.getString("TRAVEL_NAME", "")
         }
 
+        if (LocationService.isServiceRunningInForeground(requireActivity(),LocationService::class.java)){
+            binding.finish.visibility = View.VISIBLE
+        }else{
+            binding.finish.visibility = View.GONE
+        }
+
+        binding.finish.setOnClickListener {
+            LocationService.stopLocationService(requireActivity())
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
-                viewModel.sendFlow.collect{
+                viewModel.sendFlow.collect {
                     Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
                     Log.i("Travel Data", "onViewCreate: $it")
                 }
             }
         }
-        binding.finish.setOnClickListener {
-            Toast.makeText(requireContext(), "${shared.getTravelName()} finished", Toast.LENGTH_SHORT).show()
-            activity?.stopService(Intent(requireContext(), LocationService::class.java))
-        }
+
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }

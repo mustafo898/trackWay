@@ -35,7 +35,7 @@ class LocationHelper {
                         val elapsedTimeInSeconds =
                             (p0.lastLocation!!.time - lastLocation.time) / 1_000.0
                         val distanceInMeters = lastLocation.distanceTo(p0.lastLocation!!)
-                        var t = 2435
+//                        var t = 2435
                         // Speed in m/s
                         distanceInMeters / elapsedTimeInSeconds
                     } ?: 0.0
@@ -46,7 +46,7 @@ class LocationHelper {
                         listener?.invoke(
                             p0.lastLocation!!.latitude,
                             p0.lastLocation!!.longitude,
-                            speed,
+                            lastLocation?.speed!!.toDouble(),
                             Date().time
                         )
                     } else if (lastLocation!!.latitude != p0.lastLocation!!.latitude
@@ -93,7 +93,7 @@ class LocationHelper {
                     listener?.invoke(
                         p0.result!!.latitude,
                         p0.result!!.longitude,
-                        speed,
+                        p0.result.speed.toDouble(),
                         Date().time
                     )
                 } else if (lastLocation!!.latitude != p0.result!!.latitude
@@ -103,7 +103,7 @@ class LocationHelper {
                     listener?.invoke(
                         p0.result!!.latitude,
                         p0.result!!.longitude,
-                        speed,
+                        p0.result.speed.toDouble(),
                         Date().time
                     )
                 }

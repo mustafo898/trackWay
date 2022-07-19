@@ -41,6 +41,8 @@ class HistoryViewModel : ViewModel() {
         })
     }
 
+
+
     fun readTravel(path:String,name: String,travelName:String) {
         FirebaseDatabaseHelper().readNameDatabase(path,name, travelName, object : TravelInterface {
             override fun loaded(

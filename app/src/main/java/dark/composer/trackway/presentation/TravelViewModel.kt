@@ -1,5 +1,6 @@
 package dark.composer.trackway.presentation
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.location.LocationListener
@@ -31,7 +32,7 @@ class TravelViewModel : ViewModel() {
     private val sendChannel = Channel<TravelData>()
     val sendFlow = sendChannel.receiveAsFlow()
 
-    fun send(name: String, context: Context, activityContext: Context, username: String) {
+    fun send(name: String, context: Context, activityContext: Activity, username: String) {
         val key = db.getReference("travel").push().key ?: ""
         db.getReference("travel").child(username).child(name)
             .setValue(TravelData(key, name))
@@ -40,19 +41,20 @@ class TravelViewModel : ViewModel() {
                 intent.putExtra("TRAVEL_ID", key)
                 intent.putExtra("USER_NAME", username)
                 intent.putExtra("NAME", name)
-                    Log.d("EEEEE", "send:  ")
-                    viewModelScope.launch {
+                LocationService.startLocationService(activityContext,key,name,username)
+                viewModelScope.launch {
                     sendChannel.send(TravelData(key, name))
                 }
-                activityContext.startService(intent)
             }
     }
 
     fun getLocation(context: Context) {
         val locationManager: LocationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val latitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.latitude
-        val longitude = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.longitude
+        val latitude =
+            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.latitude
+        val longitude =
+            locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)?.longitude
 
         Log.d("test", "Latitute: $latitude ; Longitute: $longitude")
 

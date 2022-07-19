@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import dark.composer.trackway.R
+import dark.composer.trackway.data.services.LocationService
 import dark.composer.trackway.data.utils.SharedPref
 import dark.composer.trackway.databinding.FragmentHistoryBinding
 import kotlinx.coroutines.launch
@@ -26,7 +27,6 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(FragmentHistoryBind
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
                 viewModel.nameFlow.collect {
-                    Toast.makeText(requireContext(), it[0], Toast.LENGTH_SHORT).show()
                     Log.d("EEEE", "collect: $it")
                     historyAdapter.setName(it)
                 }
@@ -40,6 +40,12 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(FragmentHistoryBind
             )
         }
 
-        viewModel.readTravels("history", shared.getUsername().toString())
+        if (!LocationService.isServiceRunningInForeground(requireActivity(),LocationService::class.java)){
+            viewModel.readTravels("history", shared.getUsername().toString())
+        }else{
+            Toast.makeText(requireContext(), "Service is already running that's why you can not show history", Toast.LENGTH_SHORT).show()
+//            viewModel.readTravels("history", shared.getUsername().toString())
+        }
+
     }
 }
