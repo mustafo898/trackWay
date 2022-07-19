@@ -46,7 +46,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
                 viewModel.locationFlow.collect {
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 16f))
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 17.5f))
                 }
             }
         }

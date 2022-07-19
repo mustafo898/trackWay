@@ -27,7 +27,7 @@
     </item>
 
     <item
-        android:id="@+id/settingsFragment"
+        android:id="@+id/settingsFragment2"
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
