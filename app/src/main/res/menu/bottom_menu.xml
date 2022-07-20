@@ -15,7 +15,7 @@
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/ic_add"
-        android:title="Add">
+        android:title="Add trip">
     </item>
 
     <item
@@ -23,14 +23,14 @@
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/ic_history"
-        android:title="Add">
+        android:title="History">
     </item>
 
     <item
-        android:id="@+id/settingsFragment2"
+        android:id="@+id/settingsFragment"
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/ic_settings"
-        android:title="Add">
+        android:title="Settings">
     </item>
 </menu>

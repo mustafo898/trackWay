@@ -3,7 +3,9 @@ package dark.composer.trackway.presentation.travel
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.*
+import android.content.res.Resources
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,10 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import dark.composer.trackway.R
 import dark.composer.trackway.data.services.LocationService
@@ -25,6 +26,7 @@ import dark.composer.trackway.presentation.BaseFragment
 import kotlinx.coroutines.launch
 import java.util.*
 
+
 class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding::inflate) {
     private lateinit var shared: SharedPref
     lateinit var viewModel: TravelViewModel
@@ -33,14 +35,42 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
     private val callback = OnMapReadyCallback { googleMap ->
         googleMap.isMyLocationEnabled = true
-//        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         googleMap.isBuildingsEnabled = true
 
+        if (shared.getTheme() == 0) {
+            googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        } else if (shared.getTheme() == 1) {
+            googleMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        } else if (shared.getTheme() == 2) {
+            googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        }
+
         googleMap.setOnMyLocationButtonClickListener {
-            if (!checkPermission()){
+            if (!checkPermission()) {
                 checkPermission()
             }
             false
+        }
+
+        GoogleMapOptions().liteMode(true)
+
+        if (shared.getMode()){
+            try {
+                // Customise the styling of the base map using a JSON object defined
+                // in a raw resource file.
+                val success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireContext(), R.raw.map_style_night
+                    )
+                )
+                if (!success) {
+                    Log.e("fail!", "Style parsing failed.")
+                }
+            } catch (e: Resources.NotFoundException) {
+                Log.e("catch", "Can't find style. Error: ", e)
+            }
+        }else{
+            GoogleMapOptions().liteMode(true)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -52,7 +82,12 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
 
         if (name.isNotEmpty()) {
-            viewModel.send(name,requireContext(),requireActivity(),shared.getUsername().toString())
+            viewModel.send(
+                name,
+                requireContext(),
+                requireActivity(),
+                shared.getUsername().toString()
+            )
         }
 
         binding.searchImage.setOnClickListener {
@@ -65,15 +100,13 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                     val marketOptions = MarkerOptions()
                     marketOptions.position(latLng)
                     googleMap.addMarker(marketOptions)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.5f))
                 }
             }
         }
     }
 
-
-
-    private fun checkPermission():Boolean {
+    private fun checkPermission(): Boolean {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -135,13 +168,14 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         shared = SharedPref(
             requireContext()
         )
+
         checkPermission()
 
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
-        if (checkPermission()){
-            viewModel.getLocation(requireContext())
-        }else{
+        if (checkPermission()) {
+//            viewModel.getLocation(requireContext())
+        } else {
             checkPermission()
         }
 
@@ -150,14 +184,18 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             name = it.getString("TRAVEL_NAME", "")
         }
 
-        if (LocationService.isServiceRunningInForeground(requireActivity(),LocationService::class.java)){
+        if (LocationService.isServiceRunningInForeground(
+                requireActivity(),
+                LocationService::class.java
+            )
+        ) {
             binding.finish.visibility = View.VISIBLE
-        }else{
+        } else {
             binding.finish.visibility = View.GONE
         }
 
         binding.finish.setOnClickListener {
-            activity?.stopService(Intent(requireActivity(),LocationService::class.java))
+            activity?.stopService(Intent(requireActivity(), LocationService::class.java))
 //            LocationService.stopLocationService(requireActivity())
         }
 

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginBottom="60dp"
     android:layout_height="match_parent"
+    android:layout_marginBottom="60dp"
     tools:context=".presentation.travel.TravelFragment">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -13,28 +13,31 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="60dp"
+        android:background="@drawable/item_bg"
         android:elevation="1dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:background="@drawable/item_bg"
         android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <EditText
-            android:maxLines="1"
             android:id="@+id/search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="@integer/material_motion_duration_long_1" />
+            android:layout_weight="@integer/material_motion_duration_long_1"
+            android:ems="10"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="2dp" />
 
         <ImageView
+            android:id="@+id/searchImage"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:elevation="1dp"
-            android:id="@+id/searchImage"
-            android:padding="6dp"
+            android:padding="9dp"
             android:src="@drawable/ic_search"
             app:layout_constraintBottom_toBottomOf="@+id/searchInput"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,9 +56,9 @@
         android:id="@+id/finish"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:text="Finish Trial"
         android:textSize="22sp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

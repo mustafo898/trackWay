@@ -42,4 +42,22 @@
         android:name="dark.composer.trackway.presentation.history.detail.HistoryDetailsFragment"
         android:label="History Details"
         tools:layout="@layout/fragment_history_details" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="dark.composer.trackway.presentation.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_themeFragment"
+            app:destination="@id/themeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/themeFragment"
+        android:name="dark.composer.trackway.presentation.settings.theme.ThemeFragment"
+        android:label="fragment_theme"
+        tools:layout="@layout/fragment_theme" >
+        <action
+            android:id="@+id/action_themeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 </navigation>

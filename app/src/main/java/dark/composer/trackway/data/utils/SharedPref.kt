@@ -31,6 +31,26 @@ class SharedPref(context: Context) {
     fun getTravelName() = preferences.getString("TRAVEL", "")
 
     //////////////////////////////////////////////////////////
+
+    fun setTheme(num:Int){
+        editor = preferences.edit()
+        editor.putInt("THEME",num)
+        editor.apply()
+    }
+
+    fun getTheme() = preferences.getInt("THEME",0)
+
+    //////////////////////////////////////////////////////////
+
+    fun setMode(check:Boolean){
+        editor = preferences.edit()
+        editor.putBoolean("MODE",check)
+        editor.apply()
+    }
+
+    fun getMode() = preferences.getBoolean("MODE", false)
+
+    //////////////////////////////////////////////////////////
     fun clearAllData() {
         preferences.edit { clear() }
     }

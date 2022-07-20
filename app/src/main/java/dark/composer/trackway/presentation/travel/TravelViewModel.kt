@@ -36,7 +36,7 @@ class TravelViewModel : ViewModel() {
                 intent.putExtra("TRAVEL_ID", key)
                 intent.putExtra("USER_NAME", username)
                 intent.putExtra("NAME", name)
-                LocationService.startLocationService(activityContext,key,name,username)
+                LocationService.startLocationService(activityContext, key, name, username)
                 viewModelScope.launch {
                     sendChannel.send(TravelData(key, name))
                 }
