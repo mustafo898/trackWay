@@ -63,6 +63,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                         requireContext(), R.raw.map_style_night
                     )
                 )
+                Toast.makeText(requireContext(), "${shared.getMode()}", Toast.LENGTH_SHORT).show()
                 if (!success) {
                     Log.e("fail!", "Style parsing failed.")
                 }
@@ -70,7 +71,22 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                 Log.e("catch", "Can't find style. Error: ", e)
             }
         }else{
-            GoogleMapOptions().liteMode(true)
+            Toast.makeText(requireContext(), "${shared.getMode()}", Toast.LENGTH_SHORT).show()
+//            GoogleMapOptions().liteMode(false)
+            try {
+                // Customise the styling of the base map using a JSON object defined
+                // in a raw resource file.
+                val success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                        requireContext(), R.raw.map_style_light
+                    )
+                )
+                if (!success) {
+                    Log.e("fail!", "Style parsing failed.")
+                }
+            } catch (e: Resources.NotFoundException) {
+                Log.e("catch", "Can't find style. Error: ", e)
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {

@@ -27,14 +27,16 @@ class ThemeFragment : BaseFragment<FragmentThemeBinding>(FragmentThemeBinding::i
         }
         binding.modeSwitch.isChecked = shared.getMode()
 
-        binding.modeSwitch.setOnCheckedChangeListener { buttonView:CompoundButton, isChecked ->
-            if (isChecked){
-                if (buttonView.isChecked){
-                    shared.setMode(true)
-                }
+        binding.modeSwitch.setOnCheckedChangeListener { buttonView: CompoundButton, isChecked ->
+            if (isChecked) {
+//                if (buttonView.isChecked){
+                shared.setMode(true)
+//                }
 //                else{
 //                    shared.setMode(false)
 //                }
+            } else {
+                shared.setMode(false)
             }
         }
 
