@@ -96,7 +96,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
             }
         }
 
-        binding.satellite.setOnClickListener {
+        binding.satelliteR.setOnClickListener {
             if (shared.getTheme() != 2) {
                 shared.setTheme(2)
                 binding.modeSwitch.isClickable = false

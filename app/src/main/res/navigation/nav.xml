@@ -13,12 +13,19 @@
         <action
             android:id="@+id/action_mainFragment_to_travelFragment"
             app:destination="@id/travelFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
     </fragment>
     <fragment
         android:id="@+id/travelFragment"
         android:name="dark.composer.trackway.presentation.travel.TravelFragment"
         android:label="Travel"
-        tools:layout="@layout/fragment_travel" />
+        tools:layout="@layout/fragment_travel" >
+        <action
+            android:id="@+id/action_travelFragment_to_historyDetailsFragment"
+            app:destination="@id/historyDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/splashFragment"
         android:name="dark.composer.trackway.presentation.splash.SplashFragment"
@@ -36,16 +43,31 @@
         <action
             android:id="@+id/action_historyFragment_to_historyDetailsFragment"
             app:destination="@id/historyDetailsFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_travelFragment"
+            app:destination="@id/travelFragment" />
     </fragment>
     <fragment
         android:id="@+id/historyDetailsFragment"
         android:name="dark.composer.trackway.presentation.history.detail.HistoryDetailsFragment"
         android:label="History Details"
-        tools:layout="@layout/fragment_history_details" />
+        tools:layout="@layout/fragment_history_details" >
+        <action
+            android:id="@+id/action_historyDetailsFragment_to_travelFragment"
+            app:destination="@id/travelFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="dark.composer.trackway.presentation.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" >
+    </fragment>
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="dark.composer.trackway.presentation.login.LogInFragment"
+        android:label="LogInFragment" >
+        <action
+            android:id="@+id/action_logInFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

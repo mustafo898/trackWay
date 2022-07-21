@@ -1,11 +1,11 @@
 package dark.composer.trackway.presentation.travel
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
-import android.location.*
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -24,11 +24,13 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import dark.composer.trackway.R
-import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.data.services.LocationService
 import dark.composer.trackway.data.utils.SharedPref
 import dark.composer.trackway.databinding.FragmentTravelBinding
 import dark.composer.trackway.presentation.BaseFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -41,8 +43,22 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
         googleMap.isMyLocationEnabled = true
         viewModel.travelLiveDate.observe(viewLifecycleOwner) {
-            Log.d("EEE", ": ${it.latitude}  ${it.longitude}")
-            draw(it)
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(1000)
+                val options = PolylineOptions().width(5f).color(Color.BLUE).geodesic(true)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    viewLifecycleOwner.lifecycle.whenStarted {
+                        viewModel.travelLiveDate.observeForever { list ->
+                            list.forEach {
+                                options.add(LatLng(it.lat, it.lon))
+                                Log.d("EEEE", "latlng: ${it.lat} ${it.lon}")
+                            }
+                            googleMap.addPolyline(options)
+                        }
+                    }
+                }
+            }
+            Log.d("EEEEE", ": $it}")
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -68,9 +84,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
         }
 
-
-
-        if (shared.getMode()){
+        if (shared.getMode()) {
             try {
                 val success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
@@ -84,7 +98,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             } catch (e: Resources.NotFoundException) {
                 Log.e("catch", "Can't find style. Error: ", e)
             }
-        }else{
+        } else {
             Toast.makeText(requireContext(), "${shared.getMode()}", Toast.LENGTH_SHORT).show()
             try {
                 val success = googleMap.setMapStyle(
@@ -186,7 +200,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
     private fun draw(it: LatLng): PolylineOptions {
         val options = PolylineOptions().width(5f).color(Color.BLUE).geodesic(true)
         options.add(it)
-        Log.d("EEEE", "latlng: ${it.latitude} ${it.longitude}")
+        Log.d("Draw", "latlng: ${it.latitude} ${it.longitude}")
         return options
     }
 
@@ -207,6 +221,11 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         bundle?.let {
             name = it.getString("TRAVEL_NAME", "")
         }
+        if (name.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(2000)
+            }
+        }
 
         if (LocationService.isServiceRunningInForeground(
                 requireActivity(),
@@ -214,7 +233,6 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             )
         ) {
             binding.finish.visibility = View.VISIBLE
-            viewModel.readTravel("history", shared.getUsername().toString(), name)
         } else {
             binding.finish.visibility = View.GONE
         }
@@ -229,9 +247,12 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
-                viewModel.sendFlow.collect {
-                    Toast.makeText(requireContext(), "$it", Toast.LENGTH_SHORT).show()
-                    Log.i("Travel Data", "onViewCreate: $it")
+                viewModel.successFlow.collect {
+                    if (it) {
+                        viewModel.readTravel("history", shared.getUsername().toString(), name)
+                    } else {
+                        Toast.makeText(requireContext(), "Service $it", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

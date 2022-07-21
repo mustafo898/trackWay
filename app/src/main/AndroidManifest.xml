@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBGDsO6Yv9ij5g0renJ9QIRu-0Noh9uFfY" />
+            android:value="AIzaSyCBic-FDCx6N62IXUashnjBmilGbB3a27U" />
 
         <activity
             android:name=".presentation.activity.MainActivity"
@@ -34,11 +34,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".data.services.LocationService"
-            android:foregroundServiceType="location"
-            android:exported="false"
+        <service
+            android:name=".data.services.LocationService"
             android:enabled="true"
-            />
+            android:exported="false"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
