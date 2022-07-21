@@ -10,6 +10,7 @@ import dark.composer.trackway.presentation.BaseFragment
 class ThemeFragment : BaseFragment<FragmentThemeBinding>(FragmentThemeBinding::inflate) {
     private lateinit var shared: SharedPref
     override fun onViewCreate() {
+
         shared = SharedPref(requireContext())
 
         if (shared.getTheme() == 0) {
@@ -17,17 +18,18 @@ class ThemeFragment : BaseFragment<FragmentThemeBinding>(FragmentThemeBinding::i
             binding.terrainT.setTextColor(Color.parseColor("#676767"))//676767
             binding.satelliteT.setTextColor(Color.parseColor("#676767"))
             binding.modeSwitch.isClickable = true
+
         } else if (shared.getTheme() == 1) {
             binding.defaultT.setTextColor(Color.parseColor("#676767"))//0B68DC
             binding.terrainT.setTextColor(Color.parseColor("#0B68DC"))//676767
             binding.satelliteT.setTextColor(Color.parseColor("#676767"))
-            binding.modeSwitch.isClickable = false
+            binding.modeSwitch.isClickable = true
 
         } else if (shared.getTheme() == 2) {
             binding.defaultT.setTextColor(Color.parseColor("#676767"))//0B68DC
             binding.terrainT.setTextColor(Color.parseColor("#676767"))//676767
             binding.satelliteT.setTextColor(Color.parseColor("#0B68DC"))
-            binding.modeSwitch.isClickable = false
+            binding.modeSwitch.isClickable = true
         }
 
         binding.modeSwitch.isChecked = shared.getMode()
