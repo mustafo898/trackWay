@@ -18,7 +18,7 @@
             android:layout_gravity="top"
             android:gravity="center"
             android:text="Settings"
-            android:textColor="@color/text_color_st"
+            android:textColor="@color/text_color_passive"
             android:textSize="32sp" />
 
         <Space
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:text="Theme"
-                android:textColor="@color/text_color_st"
+                android:textColor="@color/text_color_passive"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 

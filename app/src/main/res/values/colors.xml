@@ -12,5 +12,6 @@
     <color name="three">#e74c3c</color>
     <color name="four">#3498db</color>
 
-    <color name="text_color_st">#676767</color>
+    <color name="text_color_passive">#676767</color>
+    <color name="text_color_active">#0B68DC</color>
 </resources>

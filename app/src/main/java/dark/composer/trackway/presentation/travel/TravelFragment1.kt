@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 
-class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding::inflate) {
+class TravelFragment1 : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding::inflate) {
     private lateinit var shared: SharedPref
     lateinit var viewModel: TravelViewModel
     var name = ""
@@ -190,7 +190,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
         if (checkPermission()) {
-            viewModel.getLocation(requireContext())
+//            viewModel.getLocation(requireContext())
         } else {
             checkPermission()
         }
