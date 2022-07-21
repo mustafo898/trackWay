@@ -4,21 +4,27 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.location.Address
-import android.location.Geocoder
+import android.graphics.Color
+import android.location.*
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import dark.composer.trackway.R
+import dark.composer.trackway.data.local.HistoryData
 import dark.composer.trackway.data.services.LocationService
 import dark.composer.trackway.data.utils.SharedPref
 import dark.composer.trackway.databinding.FragmentTravelBinding
@@ -26,16 +32,26 @@ import dark.composer.trackway.presentation.BaseFragment
 import kotlinx.coroutines.launch
 import java.util.*
 
-
 class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding::inflate) {
     private lateinit var shared: SharedPref
     lateinit var viewModel: TravelViewModel
     var name = ""
     private val PERMISSION_REQUEST_CODE = 123
-
     private val callback = OnMapReadyCallback { googleMap ->
+
         googleMap.isMyLocationEnabled = true
-        googleMap.isBuildingsEnabled = true
+        viewModel.travelLiveDate.observe(viewLifecycleOwner) {
+            Log.d("EEE", ": ${it.latitude}  ${it.longitude}")
+            draw(it)
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.whenStarted {
+                viewModel.locationFlow.collect {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 17.5f))
+                }
+            }
+        }
 
         googleMap.setOnMyLocationButtonClickListener {
             if (!checkPermission()) {
@@ -56,8 +72,6 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
 
         if (shared.getMode()){
             try {
-                // Customise the styling of the base map using a JSON object defined
-                // in a raw resource file.
                 val success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                         requireContext(), R.raw.map_style_night
@@ -72,10 +86,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             }
         }else{
             Toast.makeText(requireContext(), "${shared.getMode()}", Toast.LENGTH_SHORT).show()
-//            GoogleMapOptions().liteMode(false)
             try {
-                // Customise the styling of the base map using a JSON object defined
-                // in a raw resource file.
                 val success = googleMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                         requireContext(), R.raw.map_style_light
@@ -86,14 +97,6 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                 }
             } catch (e: Resources.NotFoundException) {
                 Log.e("catch", "Can't find style. Error: ", e)
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.whenStarted {
-                viewModel.locationFlow.collect {
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(it, 17.5f))
-                }
             }
         }
 
@@ -116,7 +119,7 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
                     val marketOptions = MarkerOptions()
                     marketOptions.position(latLng)
                     googleMap.addMarker(marketOptions)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17.5f))
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
                 }
             }
         }
@@ -180,12 +183,17 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
         }
     }
 
+    private fun draw(it: LatLng): PolylineOptions {
+        val options = PolylineOptions().width(5f).color(Color.BLUE).geodesic(true)
+        options.add(it)
+        Log.d("EEEE", "latlng: ${it.latitude} ${it.longitude}")
+        return options
+    }
+
     override fun onViewCreate() {
         shared = SharedPref(
             requireContext()
         )
-
-        checkPermission()
 
         viewModel = ViewModelProvider(this)[TravelViewModel::class.java]
 
@@ -206,13 +214,17 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             )
         ) {
             binding.finish.visibility = View.VISIBLE
+            viewModel.readTravel("history", shared.getUsername().toString(), name)
         } else {
             binding.finish.visibility = View.GONE
         }
 
         binding.finish.setOnClickListener {
-            activity?.stopService(Intent(requireActivity(), LocationService::class.java))
-//            LocationService.stopLocationService(requireActivity())
+            LocationService.stopLocationService(requireActivity())
+            navController.navigate(
+                R.id.action_travelFragment_to_historyDetailsFragment,
+                bundleOf("TRAVEL_NAME" to name)
+            )
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -224,7 +236,12 @@ class TravelFragment : BaseFragment<FragmentTravelBinding>(FragmentTravelBinding
             }
         }
 
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+        if (checkPermission()) {
+            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+            mapFragment?.getMapAsync(callback)
+            viewModel.getLocation(requireActivity())
+        } else {
+            checkPermission()
+        }
     }
 }

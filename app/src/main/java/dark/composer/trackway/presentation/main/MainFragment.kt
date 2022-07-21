@@ -19,16 +19,17 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     override fun onViewCreate() {
         shared = SharedPref(requireContext())
         if (shared.getUsername().isNullOrEmpty()) {
-            val dialog = UpdateProfileDialog(requireContext())
-            dialog.setTitle("Your Profile")
-            dialog.setOnAddListener { name, password ->
-                shared.setUsername(name)
-                db.getReference("users").child(name).setValue(UserData(name, password))
-                    .addOnCompleteListener {
-                        dialog.dismiss()
-                    }
-            }
-            dialog.show()
+//            val dialog = UpdateProfileDialog(requireContext())
+//            dialog.setTitle("Your Profile")
+//            dialog.setOnAddListener { name, password ->
+//                shared.setUsername(name)
+//                db.getReference("users").child(name).setValue(UserData(name, password))
+//                    .addOnCompleteListener {
+//                        dialog.dismiss()
+//                    }
+//            }
+//            dialog.show()
+            navController.navigate(R.id.action_mainFragment_to_logInFragment)
         }
 
         binding.start.setOnClickListener {

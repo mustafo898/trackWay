@@ -32,9 +32,6 @@ class LocationService : Service() {
             userName: String
         ) {
             Toast.makeText(context, "Start", Toast.LENGTH_SHORT).show()
-            if (isServiceRunningInForeground(context, LocationService::class.java)) {
-                stopLocationService(context)
-            }
             val intent = Intent(context, LocationService::class.java)
             intent.putExtra("TRAVEL_ID", travelId)
             intent.putExtra("USER_NAME", userName)

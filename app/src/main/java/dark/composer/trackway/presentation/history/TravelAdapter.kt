@@ -3,10 +3,11 @@ package dark.composer.trackway.presentation.history
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import dark.composer.trackway.data.local.TravelData
 import dark.composer.trackway.databinding.ItemHistoryBinding
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() {
-    private val list = mutableListOf<String>()
+class TravelAdapter : RecyclerView.Adapter<TravelAdapter.TravelViewHolder>() {
+    private val list = mutableListOf<TravelData>()
 
     private var clickListener: ((name: String) -> Unit)? = null
 
@@ -15,25 +16,25 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>() 
     }
 
 
-    inner class HistoryViewHolder(private val binding:ItemHistoryBinding):RecyclerView.ViewHolder(binding.root){
-        fun bind(name: String){
-            binding.name.text = name
+    inner class TravelViewHolder(private val binding:ItemHistoryBinding):RecyclerView.ViewHolder(binding.root){
+        fun bind(name: TravelData){
+            binding.name.text = name.name
             itemView.setOnClickListener {
-                clickListener?.invoke(name)
+                clickListener?.invoke(name.name)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HistoryViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TravelViewHolder(
         ItemHistoryBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
-    fun setName(list:List<String>){
+    fun setName(list:List<TravelData>){
         this.list.clear()
         this.list.addAll(list)
         notifyDataSetChanged()
     }
 
-    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) = holder.bind(list[position])
+    override fun onBindViewHolder(holder: TravelViewHolder, position: Int) = holder.bind(list[position])
 
     override fun getItemCount() = list.size
 }

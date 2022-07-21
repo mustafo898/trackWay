@@ -65,9 +65,8 @@ class LocationHelper {
                         )
                     }
                 } catch (e: Exception) {
-//                    log(e.toString())
+                    Log.d("getLocationService",e.toString())
                 }
-
             }
         }
 

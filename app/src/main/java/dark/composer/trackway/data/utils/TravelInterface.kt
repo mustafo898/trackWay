@@ -7,3 +7,11 @@ interface TravelInterface {
     fun loaded(list:List<HistoryData>,key:List<String>,travelName:List<String>)
     fun travelLoaded(travelDate:List<HistoryData>,travelName:String,key:List<String>)
 }
+
+interface LastLatLng{
+    fun last(data:List<HistoryData>)
+}
+
+interface GetName{
+    fun name(data:List<TravelData>)
+}

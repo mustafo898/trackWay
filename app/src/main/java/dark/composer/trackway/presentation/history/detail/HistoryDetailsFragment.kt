@@ -39,17 +39,13 @@ class HistoryDetailsFragment :
             name = it.getString("TRAVEL_NAME", "")
         }
 
-        val mapFragment =
-            childFragmentManager.findFragmentById(R.id.detailsMap) as SupportMapFragment?
+        val mapFragment = childFragmentManager.findFragmentById(R.id.detailsMap) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
-
 
         viewModel.readTravel("history", sharedPref.getUsername().toString(), name)
     }
 
     private val callback = OnMapReadyCallback { googleMap ->
-
-        googleMap.isMyLocationEnabled = true
         val options = PolylineOptions().width(5f).color(Color.BLUE).geodesic(true)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.whenStarted {
@@ -74,22 +70,20 @@ class HistoryDetailsFragment :
     private fun load(list: List<HistoryData>) {
         var count = 0
         val firsTime = list.first().historyTime
-        var lasTime = list.last().historyTime
+        val lasTime = list.last().historyTime
         var speed = 0.0
         val first = Calendar.getInstance()
-        val time = Calendar.getInstance()
         val last = Calendar.getInstance()
         var distance = 0.0
         var d = 0.0
-        for (i in 0 until list.size - 1) {
-            d = SphericalUtil.computeDistanceBetween(
-                LatLng(list[i].lat, list[i].lon),
-                LatLng(list[i + 1].lat, list[i + 1].lon)
-            )
+        for (i in 0 until list.size-1) {
+            d = SphericalUtil.computeDistanceBetween(LatLng(list[i].lat, list[i].lon), LatLng(list[i + 1].lat, list[i + 1].lon))
+//            Log.d("WWWWW", "load: $i ${i+1}")
             distance += d
             count += 1
             speed += list[i].historyAvgSpeed
         }
+
         speed /= count
 
         last.timeInMillis = lasTime
@@ -98,8 +92,16 @@ class HistoryDetailsFragment :
         binding.startTime.text = SimpleDateFormat().format(first.time)
 
         binding.time.text = getTimeDif(first,last)
-        binding.distance.text = String.format("%.3f", distance / 1000)
-        binding.speed.text = String.format("%.1f", speed)
+        if (distance>1000){
+            binding.distance.text = "${String.format("%.3f", distance / 1000)} km"
+        }else{
+            binding.distance.text = "${String.format("%.0f", distance)} m"
+        }
+        if (speed>0){
+            binding.speed.text = "${String.format("%.1f", speed)} km/h"
+        }else{
+            binding.speed.text = "${String.format("%.1f", speed)} m/h"
+        }
         binding.travelName.text = name
     }
 
@@ -107,9 +109,6 @@ class HistoryDetailsFragment :
         val mills1 = cal1.timeInMillis
         val mills2 = cal2.timeInMillis
         val diff = mills2 - mills1
-//        val diffSeconds = diff / 1000
-//        val diffMinutes = diff / (60 * 1000)
-//        val diffHours = diff / (60 * 60 * 1000)
         val hours = (diff / (1000 * 60 * 60))
         val min = (diff / (1000 * 60) % 60)
 
@@ -118,8 +117,6 @@ class HistoryDetailsFragment :
         } else {
             "$min mins"
         }
-//        return (diffMinutes.toString() + "dk." + (diffSeconds - diffMinutes * 60)
-//                + "sn" + (diff - diffSeconds * 1000) + "ms.")
     }
 }
 

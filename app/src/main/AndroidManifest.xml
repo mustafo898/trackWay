@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCBic-FDCx6N62IXUashnjBmilGbB3a27U" />
+            android:value="AIzaSyBGDsO6Yv9ij5g0renJ9QIRu-0Noh9uFfY" />
 
         <activity
             android:name=".presentation.activity.MainActivity"
@@ -39,7 +39,6 @@
             android:exported="false"
             android:enabled="true"
             />
-
     </application>
 
 </manifest>
